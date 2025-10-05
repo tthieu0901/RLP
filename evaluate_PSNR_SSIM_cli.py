@@ -48,14 +48,15 @@ def rgb_to_ycbcr(img):
 # Ensure CUDA is available for PyTorch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def evaluate(root_dir, datasets, methods):
+def evaluate(root_dir, gt_root_dir, datasets, methods):
     for dataset in datasets:
         print(dataset)
         for method in methods:
             file_path = os.path.join(root_dir, dataset, method)
 
             image_files = [os.path.join(file_path, f) for f in os.listdir(file_path) if f.endswith(('.jpg', '.png'))]
-            gt_files = [image_file.replace(method, 'gt')[:-7]+'.png' for image_file in image_files]
+            # Use gt_root_dir to construct gt_files paths
+            gt_files = [os.path.join(gt_root_dir, os.path.basename(f)[:-7]+'.png') for f in image_files]
 
             total_psnr = 0.0
             total_ssim = 0.0
@@ -85,7 +86,8 @@ def evaluate(root_dir, datasets, methods):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate PSNR and SSIM for image results.")
     parser.add_argument('--root_dir', type=str, required=True, help='Root directory of results')
+    parser.add_argument('--gt_root_dir', type=str, required=True, help='Root directory of ground truth images')
     parser.add_argument('--datasets', type=str, nargs='+', required=True, help='List of dataset names')
     parser.add_argument('--methods', type=str, nargs='+', required=True, help='List of method names')
     args = parser.parse_args()
-    evaluate(args.root_dir, args.datasets, args.methods)
+    evaluate(args.root_dir, args.gt_root_dir, args.datasets, args.methods)
