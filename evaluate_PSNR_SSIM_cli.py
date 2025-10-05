@@ -48,8 +48,8 @@ def rgb_to_ycbcr(img):
 # Ensure CUDA is available for PyTorch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def evaluate(root_dir, gt_root_dir, datasets, methods):
-    for dataset in datasets:
+def evaluate(root_dir, gt_root_dirs, datasets, methods):
+    for dataset, gt_root_dir in zip(datasets, gt_root_dirs):
         print(dataset)
         for method in methods:
             file_path = os.path.join(root_dir, dataset, method)
@@ -95,8 +95,10 @@ def evaluate(root_dir, gt_root_dir, datasets, methods):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate PSNR and SSIM for image results.")
     parser.add_argument('--root_dir', type=str, required=True, help='Root directory of results')
-    parser.add_argument('--gt_root_dir', type=str, required=True, help='Root directory of ground truth images')
+    parser.add_argument('--gt_root_dirs', type=str, nargs='+', required=True, help='List of ground truth directories, one per dataset')
     parser.add_argument('--datasets', type=str, nargs='+', required=True, help='List of dataset names')
     parser.add_argument('--methods', type=str, nargs='+', required=True, help='List of method names')
     args = parser.parse_args()
-    evaluate(args.root_dir, args.gt_root_dir, args.datasets, args.methods)
+    if len(args.gt_root_dirs) != len(args.datasets):
+        raise ValueError('The number of gt_root_dirs must match the number of datasets.')
+    evaluate(args.root_dir, args.gt_root_dirs, args.datasets, args.methods)
