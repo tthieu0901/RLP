@@ -56,7 +56,16 @@ def evaluate(root_dir, gt_root_dir, datasets, methods):
 
             image_files = [os.path.join(file_path, f) for f in os.listdir(file_path) if f.endswith(('.jpg', '.png'))]
             # Use gt_root_dir to construct gt_files paths
-            gt_files = [os.path.join(gt_root_dir, os.path.basename(f)[:-7]+'.png') for f in image_files]
+            gt_files = []
+            for f in image_files:
+                base = os.path.basename(f)
+                # Remove the underscore and following digits before the extension
+                name, ext = os.path.splitext(base)
+                if '_' in name:
+                    gt_name = name.split('_')[0] + '.png'
+                else:
+                    gt_name = base
+                gt_files.append(os.path.join(gt_root_dir, gt_name))
 
             total_psnr = 0.0
             total_ssim = 0.0
