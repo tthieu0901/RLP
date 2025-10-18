@@ -60,8 +60,8 @@ def evaluate(root_dir, gt_root_dirs, datasets, methods):
             for f in image_files:
                 base = os.path.basename(f)
                 # Remove the underscore and following digits before the extension
-                name, ext = os.path.splitext(base)
-                if '_' in name:
+                name = os.path.splitext(base)
+                if dataset == 'gtav':
                     gt_name = name.split('_')[0] + '.png'
                 else:
                     gt_name = base
