@@ -42,6 +42,9 @@ logname = os.path.join(log_dir, datetime.datetime.now().isoformat()+'.txt')
 print("Now time is : ",datetime.datetime.now().isoformat())
 result_dir = os.path.join(log_dir, 'results')
 model_dir  = os.path.join(log_dir, 'models')
+
+print("Checkpoint saved in:" + model_dir)
+
 if not os.path.exists(result_dir):
     os.makedirs(result_dir, exist_ok=True)
 if not os.path.exists(model_dir):
