@@ -45,8 +45,8 @@ class DatasetTrain(Dataset):
     def __init__(self, data_dir, img_options=None):
         super(DatasetTrain, self).__init__()
 
-        input_folder = 'rainy'
-        gt_folder = 'gt'
+        input_folder = ''
+        gt_folder = ''
         self.augment   = Augment_RGB_torch()
         self.transforms_aug = [method for method in dir(self.augment) if callable(getattr(self.augment, method)) if not method.startswith('_')] 
         
