@@ -11,7 +11,8 @@ def parse_options():
     parser.add_argument('--use_rpim', action='store_true', default=False, help='whether to use RPIM')
 
     # args for training
-    parser.add_argument('--train_dir', type=str, default ='/path/to/train/data',  help='dir of train data')
+    parser.add_argument('--input_train_dir', type=str, default ='/path/to/train/data',  help='dir of input train data')
+    parser.add_argument('--gt_train_dir', type=str, default ='/path/to/gt/data',  help='dir of gt train data')
     parser.add_argument('--train_ps', type=int, default=256, help='patch size of training sample')
     parser.add_argument('--batch_size', type=int, default=4, help='batch size')
     parser.add_argument('--train_workers', type=int, default=8, help='train_dataloader workers')
