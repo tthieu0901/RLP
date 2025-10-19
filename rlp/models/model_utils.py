@@ -21,7 +21,10 @@ def save_checkpoint(model_dir, state, session):
     torch.save(state, model_out_path)
 
 def load_checkpoint(model, weights):
-    checkpoint = torch.load(weights)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print("CUDA available:", torch.cuda.is_available())
+    print("GPU name:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
+    checkpoint = torch.load(weights, map_location=device)
     if "state_dict" in checkpoint:
         state_dict = checkpoint["state_dict"]
     else:
