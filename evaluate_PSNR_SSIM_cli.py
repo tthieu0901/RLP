@@ -59,13 +59,21 @@ def evaluate(root_dir, gt_root_dirs, datasets, methods):
             gt_files = []
             for f in image_files:
                 base = os.path.basename(f)
-                # Remove the underscore and following digits before the extension
-                name = os.path.splitext(base)
+                # Get base name without extension and suffix
+                name, _ = os.path.splitext(base)
                 if dataset == 'gtav':
-                    gt_name = name.split('_')[0] + '.png'
+                    name = name.split('_')[0]
+                
+                # Try both .png and .jpg for ground truth
+                gt_png = os.path.join(gt_root_dir, name + '.png')
+                gt_jpg = os.path.join(gt_root_dir, name + '.jpg')
+                
+                if os.path.exists(gt_png):
+                    gt_files.append(gt_png)
+                elif os.path.exists(gt_jpg):
+                    gt_files.append(gt_jpg)
                 else:
-                    gt_name = base
-                gt_files.append(os.path.join(gt_root_dir, gt_name))
+                    raise FileNotFoundError(f"Ground truth file not found for {name} (tried both .png and .jpg)")
 
             total_psnr = 0.0
             total_ssim = 0.0
